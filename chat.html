@@ -1,19 +1,64 @@
-<script type='text/javascript'>
-	function initEmbeddedMessaging() {
-		try {
-			embeddedservice_bootstrap.settings.language = 'en_US'; // For example, enter 'en' or 'en-US'
+<html>
+<style type='text/css'>
+	.embeddedServiceHelpButton .helpButton .uiButton {
+		background-color: #005290;
+		font-family: "Arial", sans-serif;
+	}
+	.embeddedServiceHelpButton .helpButton .uiButton:focus {
+		outline: 1px solid #005290;
+	}
+</style>
 
-			embeddedservice_bootstrap.init(
-				'00D5Y000002VAOf',
-				'Shopping_Asssistant_Test',
-				'https://tiki.my.site.com/ESWShoppingAsssistantTe1691026572010',
-				{
-					scrt2URL: 'https://tiki.my.salesforce-scrt.com'
-				}
-			);
-		} catch (err) {
-			console.error('Error loading Embedded Messaging: ', err);
-		}
+<script type='text/javascript' src='https://service.force.com/embeddedservice/5.0/esw.min.js'></script>
+<script type='text/javascript'>
+	var initESW = function(gslbBaseURL) {
+		embedded_svc.settings.displayHelpButton = true; //Or false
+		embedded_svc.settings.language = ''; //For example, enter 'en' or 'en-US'
+
+		//embedded_svc.settings.defaultMinimizedText = '...'; //(Defaults to Chat with an Expert)
+		//embedded_svc.settings.disabledMinimizedText = '...'; //(Defaults to Agent Offline)
+
+		//embedded_svc.settings.loadingText = ''; //(Defaults to Loading)
+		//embedded_svc.settings.storageDomain = 'yourdomain.com'; //(Sets the domain for your deployment so that visitors can navigate subdomains during a chat session)
+
+		// Settings for Chat
+		//embedded_svc.settings.directToButtonRouting = function(prechatFormData) {
+			// Dynamically changes the button ID based on what the visitor enters in the pre-chat form.
+			// Returns a valid button ID.
+		//};
+		//embedded_svc.settings.prepopulatedPrechatFields = {}; //Sets the auto-population of pre-chat form fields
+		//embedded_svc.settings.fallbackRouting = []; //An array of button IDs, user IDs, or userId_buttonId
+		//embedded_svc.settings.offlineSupportMinimizedText = '...'; //(Defaults to Contact Us)
+
+		embedded_svc.settings.enabledFeatures = ['LiveAgent'];
+		embedded_svc.settings.entryFeature = 'LiveAgent';
+
+		embedded_svc.init(
+			'https://tiki.my.salesforce.com',
+			'https://tiki.my.site.com/ESWat1691027475371vforcesite',
+			gslbBaseURL,
+			'00D5Y000002VAOf',
+			'SA_Group',
+			{
+				baseLiveAgentContentURL: 'https://c.la2-c1-hnd.salesforceliveagent.com/content',
+				deploymentId: '5725h000000pGVr',
+				buttonId: '5735h000000pGGp',
+				baseLiveAgentURL: 'https://d.la2-c1-hnd.salesforceliveagent.com/chat',
+				eswLiveAgentDevName: 'SA_Group',
+				isOfflineSupportEnabled: false
+			}
+		);
 	};
+
+	if (!window.embedded_svc) {
+		var s = document.createElement('script');
+		s.setAttribute('src', 'https://tiki.my.salesforce.com/embeddedservice/5.0/esw.min.js');
+		s.onload = function() {
+			initESW(null);
+		};
+		document.body.appendChild(s);
+	} else {
+		initESW('https://service.force.com');
+	}
 </script>
-<script type='text/javascript' src='https://tiki.my.site.com/ESWShoppingAsssistantTe1691026572010/assets/js/bootstrap.min.js' onload='initEmbeddedMessaging()'></script>
+</html>
